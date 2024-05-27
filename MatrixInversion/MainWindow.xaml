@@ -48,6 +48,7 @@
                 <RadioButton Name="LUPMethodRadioButton" Content="LUP Method" Margin="5"/>
             </StackPanel>
             <Button Name="InvertMatrixButton" Content="Invert Matrix" Click="InvertMatrixButton_Click" Width="150" Height="40" Margin="10"/>
+            <Button Name="SaveResultButton" Content="Save Result" Click="SaveResultButton_Click" Width="150" Height="40" Margin="10"/>
         </StackPanel>
     </Grid>
 </Window>

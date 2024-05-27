@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Data;
-using System.Diagnostics;
 using System.IO;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace MatrixInversion
 {
@@ -81,22 +80,6 @@ namespace MatrixInversion
 
                     double[,] roundedInvertedMatrix = RoundMatrix(invertedMatrix.Data, 3);
                     InvertedMatrixDataGrid.ItemsSource = ToDataTable(roundedInvertedMatrix).DefaultView;
-
-                    // Save to file
-                    string filePath = "MatrixInversionResult.txt";
-                    using (StreamWriter writer = new StreamWriter(filePath))
-                    {
-                        writer.WriteLine("Original Matrix:");
-                        writer.WriteLine(originalMatrix);
-                        writer.WriteLine("\nInverted Matrix:");
-                        writer.WriteLine(new Matrix(roundedInvertedMatrix));
-                        writer.WriteLine("\nCalculation Log:");
-                        writer.WriteLine(log);
-                        writer.WriteLine($"\nTime Elapsed: {timeElapsed} ms");
-                        writer.WriteLine($"Operation Count: {operationCount}");
-                    }
-
-                    MessageBox.Show($"The result has been saved to {filePath}");
                 }
                 catch (Exception ex)
                 {
@@ -106,6 +89,37 @@ namespace MatrixInversion
             else
             {
                 MessageBox.Show("Please input or generate a matrix first.");
+            }
+        }
+
+        private void SaveResultButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (originalMatrix == null || invertedMatrix == null)
+            {
+                MessageBox.Show("Please generate or input a matrix and invert it first.", "No Data to Save", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Text file (*.txt)|*.txt";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    using (StreamWriter writer = new StreamWriter(saveFileDialog.FileName))
+                    {
+                        writer.WriteLine("Original Matrix:");
+                        writer.WriteLine(originalMatrix);
+                        writer.WriteLine("\nInverted Matrix:");
+                        writer.WriteLine(new Matrix(RoundMatrix(invertedMatrix.Data, 3)));
+                    }
+
+                    MessageBox.Show($"The result has been saved to {saveFileDialog.FileName}", "File Saved", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred while saving the file: {ex.Message}", "Save Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
