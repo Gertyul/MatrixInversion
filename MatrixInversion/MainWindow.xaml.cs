@@ -109,9 +109,28 @@ namespace MatrixInversion
                     using (StreamWriter writer = new StreamWriter(saveFileDialog.FileName))
                     {
                         writer.WriteLine("Original Matrix:");
-                        writer.WriteLine(originalMatrix);
+                        writer.WriteLine(originalMatrix.ToString());
                         writer.WriteLine("\nInverted Matrix:");
-                        writer.WriteLine(new Matrix(RoundMatrix(invertedMatrix.Data, 3)));
+                        writer.WriteLine(new Matrix(RoundMatrix(invertedMatrix.Data, 3)).ToString());
+
+                        if (SchulzMethodRadioButton.IsChecked == true)
+                        {
+                            string log;
+                            double timeElapsed;
+                            long operationCount;
+                            MatrixInverter.InvertUsingSchulz(originalMatrix, out log, out timeElapsed, out operationCount);
+                            writer.WriteLine("\nSchulz Method Log:");
+                            writer.WriteLine(log);
+                        }
+                        else if (LUPMethodRadioButton.IsChecked == true)
+                        {
+                            string log;
+                            double timeElapsed;
+                            long operationCount;
+                            MatrixInverter.InvertUsingLUP(originalMatrix, out log, out timeElapsed, out operationCount);
+                            writer.WriteLine("\nLUP Method Log:");
+                            writer.WriteLine(log);
+                        }
                     }
 
                     MessageBox.Show($"The result has been saved to {saveFileDialog.FileName}", "File Saved", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -122,6 +141,7 @@ namespace MatrixInversion
                 }
             }
         }
+
 
         private DataTable ToDataTable(double[,] matrix)
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 
 public class Matrix
@@ -86,21 +87,6 @@ public class Matrix
             for (int j = 0; j < Size; j++)
             {
                 sb.Append(Math.Round(Data[i, j], 3).ToString("F3")).Append("\t");
-            }
-            sb.AppendLine();
-        }
-        return sb.ToString();
-    }
-
-
-    private static string MatrixToString(double[,] matrix)
-    {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < matrix.GetLength(0); i++)
-        {
-            for (int j = 0; j < matrix.GetLength(1); j++)
-            {
-                sb.Append(matrix[i, j].ToString("F4")).Append("\t");
             }
             sb.AppendLine();
         }

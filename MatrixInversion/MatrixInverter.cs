@@ -1,6 +1,6 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
+using System;
 
 public static class MatrixInverter
 {
@@ -52,6 +52,8 @@ public static class MatrixInverter
         }
 
         log += "\nMethod converged successfully.";
+        log += $"\nTime elapsed: {timeElapsed} ms";
+        log += $"\nOperation count: {operationCount}";
         return new Matrix(X_next);
     }
 
@@ -224,6 +226,11 @@ public static class MatrixInverter
         stopwatch.Stop();
         timeElapsed = stopwatch.Elapsed.TotalMilliseconds;
 
+        log += "\nInverted matrix:\n";
+        log += MatrixToString(invA);
+        log += $"\nTime elapsed: {timeElapsed} ms";
+        log += $"\nOperation count: {operationCount}";
+
         return new Matrix(invA);
     }
 
@@ -300,7 +307,7 @@ public static class MatrixInverter
             }
         }
 
-        log = "L matrix:\n" + MatrixToString(L);
+        log += "\nL matrix:\n" + MatrixToString(L);
         log += "\nU matrix:\n" + MatrixToString(U);
         log += "\nP vector: " + string.Join(", ", P);
 
