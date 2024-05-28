@@ -3,6 +3,8 @@ using System;
 using System.Data;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Animation;
 
 namespace MatrixInversion
 {
@@ -11,9 +13,25 @@ namespace MatrixInversion
         private Matrix originalMatrix;
         private Matrix invertedMatrix;
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != null)
+            {
+                Storyboard storyboard = (Storyboard)FindResource("ButtonClickStoryboard");
+                storyboard.Begin(button);
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
+
+            // Додаємо подію для всіх кнопок
+            InputMatrixButton.Click += Button_Click;
+            GenerateMatrixButton.Click += Button_Click;
+            InvertMatrixButton.Click += Button_Click;
+            SaveResultButton.Click += Button_Click;
         }
 
         private void InputMatrixButton_Click(object sender, RoutedEventArgs e)

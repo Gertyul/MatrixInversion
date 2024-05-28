@@ -3,6 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Matrix Inversion Tool" Height="600" Width="800"
         Background="#f0f0f0">
+    <Window.Resources>
+        <Storyboard x:Key="ButtonClickStoryboard">
+            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                             From="1.0" To="0.9" Duration="0:0:0.1" AutoReverse="True"/>
+            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                             From="1.0" To="0.9" Duration="0:0:0.1" AutoReverse="True"/>
+        </Storyboard>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -24,12 +33,20 @@
         <!-- Original Matrix Section -->
         <GroupBox Header="Original Matrix" Grid.Row="1" Grid.Column="0" Margin="10">
             <StackPanel>
-                <Button Name="InputMatrixButton" Content="Input Matrix" Click="InputMatrixButton_Click" Margin="5"/>
+                <Button Name="InputMatrixButton" Content="Input Matrix" Click="InputMatrixButton_Click" Margin="5" RenderTransformOrigin="0.5,0.5">
+                    <Button.RenderTransform>
+                        <ScaleTransform/>
+                    </Button.RenderTransform>
+                </Button>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
                     <TextBlock Text="Size:" VerticalAlignment="Center" Margin="5"/>
                     <TextBox Name="MatrixSizeTextBox" Width="50" Margin="5"/>
                 </StackPanel>
-                <Button Name="GenerateMatrixButton" Content="Generate Matrix" Click="GenerateMatrixButton_Click" Margin="5"/>
+                <Button Name="GenerateMatrixButton" Content="Generate Matrix" Click="GenerateMatrixButton_Click" Margin="5" RenderTransformOrigin="0.5,0.5">
+                    <Button.RenderTransform>
+                        <ScaleTransform/>
+                    </Button.RenderTransform>
+                </Button>
                 <DataGrid Name="OriginalMatrixDataGrid" AutoGenerateColumns="True" CanUserAddRows="False" IsReadOnly="True" Margin="5"/>
             </StackPanel>
         </GroupBox>
@@ -47,8 +64,16 @@
                 <RadioButton Name="SchulzMethodRadioButton" Content="Schulz Method" IsChecked="True" Margin="5"/>
                 <RadioButton Name="LUPMethodRadioButton" Content="LUP Method" Margin="5"/>
             </StackPanel>
-            <Button Name="InvertMatrixButton" Content="Invert Matrix" Click="InvertMatrixButton_Click" Width="150" Height="40" Margin="10"/>
-            <Button Name="SaveResultButton" Content="Save Result" Click="SaveResultButton_Click" Width="150" Height="40" Margin="10"/>
+            <Button Name="InvertMatrixButton" Content="Invert Matrix" Click="InvertMatrixButton_Click" Width="150" Height="40" Margin="10" RenderTransformOrigin="0.5,0.5">
+                <Button.RenderTransform>
+                    <ScaleTransform/>
+                </Button.RenderTransform>
+            </Button>
+            <Button Name="SaveResultButton" Content="Save Result" Click="SaveResultButton_Click" Width="150" Height="40" Margin="10" RenderTransformOrigin="0.5,0.5">
+                <Button.RenderTransform>
+                    <ScaleTransform/>
+                </Button.RenderTransform>
+            </Button>
         </StackPanel>
     </Grid>
 </Window>
