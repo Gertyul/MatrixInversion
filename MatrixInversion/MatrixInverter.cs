@@ -28,7 +28,7 @@ public static class MatrixInverter
             R = MatrixSubtract(I, MatrixMultiply(A, X, ref operationCount));
             X_next = MatrixAdd(X, MatrixMultiply(X, R, ref operationCount));
 
-            operationCount += 2 * n * n; // для додавання і віднімання
+            operationCount += 2 * n * n;
 
             if (MatrixNorm(MatrixSubtract(X_next, X)) < tolerance)
             {
@@ -114,7 +114,7 @@ public static class MatrixInverter
                 for (int k = 0; k < n; k++)
                 {
                     result[i, j] += A[i, k] * B[k, j];
-                    operationCount += 2; // для множення та додавання
+                    operationCount += 2;
                 }
             }
         }
@@ -260,7 +260,7 @@ public static class MatrixInverter
 
             if (max < 1e-10)
             {
-                return false; // Matrix is singular
+                return false;
             }
 
             if (kPrime != k)
@@ -285,7 +285,7 @@ public static class MatrixInverter
                 for (int j = k + 1; j < n; j++)
                 {
                     LU[i, j] -= LU[i, k] * LU[k, j];
-                    operationCount += 2; // для множення та віднімання
+                    operationCount += 2; 
                 }
             }
         }
@@ -325,7 +325,7 @@ public static class MatrixInverter
             for (int j = 0; j < i; j++)
             {
                 y[i] -= L[i, j] * y[j];
-                operationCount += 2; // для множення та віднімання
+                operationCount += 2; 
             }
         }
 
@@ -343,10 +343,10 @@ public static class MatrixInverter
             for (int j = i + 1; j < n; j++)
             {
                 x[i] -= U[i, j] * x[j];
-                operationCount += 2; // для множення та віднімання
+                operationCount += 2; 
             }
             x[i] /= U[i, i];
-            operationCount++; // для ділення
+            operationCount++;
         }
 
         return x;
