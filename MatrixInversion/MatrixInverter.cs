@@ -53,7 +53,7 @@ public static class MatrixInverter
 
         log += "\nMethod converged successfully.";
         log += $"\nTime elapsed: {timeElapsed} ms";
-        log += $"\nOperation count: {operationCount}";
+        log += $"\nIterations count: {operationCount}";
         return new Matrix(X_next);
     }
 
@@ -114,7 +114,7 @@ public static class MatrixInverter
                 for (int k = 0; k < n; k++)
                 {
                     result[i, j] += A[i, k] * B[k, j];
-                    operationCount += 2;
+                    
                 }
             }
         }
@@ -229,7 +229,7 @@ public static class MatrixInverter
         log += "\nInverted matrix:\n";
         log += MatrixToString(invA);
         log += $"\nTime elapsed: {timeElapsed} ms";
-        log += $"\nOperation count: {operationCount}";
+        log += $"\nIterations count: {operationCount}";
 
         return new Matrix(invA);
     }
@@ -280,12 +280,12 @@ public static class MatrixInverter
             for (int i = k + 1; i < n; i++)
             {
                 LU[i, k] /= LU[k, k];
-                operationCount++;
+                
 
                 for (int j = k + 1; j < n; j++)
                 {
                     LU[i, j] -= LU[i, k] * LU[k, j];
-                    operationCount += 2; 
+                    
                 }
             }
         }
@@ -343,7 +343,7 @@ public static class MatrixInverter
             for (int j = i + 1; j < n; j++)
             {
                 x[i] -= U[i, j] * x[j];
-                operationCount += 2; 
+                
             }
             x[i] /= U[i, i];
             operationCount++;
