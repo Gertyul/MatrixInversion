@@ -13,16 +13,6 @@ namespace MatrixInversion
         private Matrix originalMatrix;
         private Matrix invertedMatrix;
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = sender as Button;
-            if (button != null)
-            {
-                Storyboard storyboard = (Storyboard)FindResource("ButtonClickStoryboard");
-                storyboard.Begin(button);
-            }
-        }
-
         public MainWindow()
         {
             InitializeComponent();
@@ -34,16 +24,74 @@ namespace MatrixInversion
             SaveResultButton.Click += Button_Click;
         }
 
+        // Обробник анімації кнопок
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != null)
+            {
+                Storyboard storyboard = (Storyboard)FindResource("ButtonClickStoryboard");
+                storyboard.Begin(button);
+            }
+        }
+
+        // Обробник кнопки введення матриці
         private void InputMatrixButton_Click(object sender, RoutedEventArgs e)
         {
-            InputMatrixDialog dialog = new InputMatrixDialog();
+            InputMatrixDialog dialog = new InputMatrixDialog(originalMatrix);
+
             if (dialog.ShowDialog() == true)
             {
+                if (MatrixHasInvalidValues(dialog.Matrix))
+                {
+                    MessageBox.Show("Matrix elements must not exceed 5000.", "Invalid Matrix Values", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
                 originalMatrix = dialog.Matrix;
                 OriginalMatrixDataGrid.ItemsSource = ToDataTable(originalMatrix.Data).DefaultView;
             }
         }
 
+
+        private void LoadMatrixButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Text file (*.txt)|*.txt";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    string[] lines = File.ReadAllLines(openFileDialog.FileName);
+                    int size = lines.Length;
+                    double[,] data = new double[size, size];
+
+                    for (int i = 0; i < size; i++)
+                    {
+                        string[] elements = lines[i].Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                        for (int j = 0; j < size; j++)
+                        {
+                            double value = double.Parse(elements[j]);
+                            if (Math.Abs(value) > 5000)
+                            {
+                                MessageBox.Show("Matrix elements must not exceed 5000.", "Invalid Matrix Values", MessageBoxButton.OK, MessageBoxImage.Error);
+                                return;
+                            }
+                            
+                            data[i, j] = value;
+                        }
+                    }
+
+                    originalMatrix = new Matrix(data);
+                    OriginalMatrixDataGrid.ItemsSource = ToDataTable(originalMatrix.Data).DefaultView;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred while loading the file: {ex.Message}", "Load Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        // Обробник кнопки генерації матриці
         private void GenerateMatrixButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -55,8 +103,17 @@ namespace MatrixInversion
                     MessageBox.Show("Matrix size must be a positive integer.", "Invalid Matrix Size", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-
+                if (size > 12)
+                {
+                    MessageBox.Show("Matrix size can`t over than 12.", "Invalid Matrix Size", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
                 originalMatrix = Matrix.GenerateRandomMatrix(size);
+                if (MatrixHasInvalidValues(originalMatrix))
+                {
+                    MessageBox.Show("Matrix elements must not exceed 5000.", "Invalid Matrix Values", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
                 OriginalMatrixDataGrid.ItemsSource = ToDataTable(originalMatrix.Data).DefaultView;
             }
             catch (FormatException)
@@ -65,6 +122,7 @@ namespace MatrixInversion
             }
         }
 
+        // Обробник кнопки інверсії матриці
         private void InvertMatrixButton_Click(object sender, RoutedEventArgs e)
         {
             if (originalMatrix != null)
@@ -110,6 +168,7 @@ namespace MatrixInversion
             }
         }
 
+        // Обробник кнопки збереження результату
         private void SaveResultButton_Click(object sender, RoutedEventArgs e)
         {
             if (originalMatrix == null || invertedMatrix == null)
@@ -118,8 +177,10 @@ namespace MatrixInversion
                 return;
             }
 
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Text file (*.txt)|*.txt";
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Text file (*.txt)|*.txt"
+            };
             if (saveFileDialog.ShowDialog() == true)
             {
                 try
@@ -160,7 +221,7 @@ namespace MatrixInversion
             }
         }
 
-
+        // Перетворення матриці в DataTable
         private DataTable ToDataTable(double[,] matrix)
         {
             int rows = matrix.GetLength(0);
@@ -185,6 +246,7 @@ namespace MatrixInversion
             return dt;
         }
 
+        // Округлення матриці до вказаної кількості знаків після коми
         private double[,] RoundMatrix(double[,] matrix, int decimals)
         {
             int rows = matrix.GetLength(0);
@@ -200,6 +262,19 @@ namespace MatrixInversion
             }
 
             return roundedMatrix;
+        }
+
+        //валідація при числі матриці більшому за 5000
+        private bool MatrixHasInvalidValues(Matrix matrix)
+        {
+            foreach (double value in matrix.Data)
+            {
+                if (Math.Abs(value) > 5000)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

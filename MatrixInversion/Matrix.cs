@@ -6,18 +6,22 @@ public class Matrix
 {
     public double[,] Data { get; set; }
 
+    // Конструктор для створення матриці заданого розміру.
     public Matrix(int size)
     {
         Data = new double[size, size];
     }
 
+    // Конструктор для ініціалізації матриці з існуючого масиву.
     public Matrix(double[,] data)
     {
         Data = data;
     }
 
+    // Властивість для отримання розміру матриці.
     public int Size => Data.GetLength(0);
 
+    // Метод для обчислення визначника матриці.
     public double Determinant()
     {
         if (Data.GetLength(0) != Data.GetLength(1))
@@ -28,6 +32,7 @@ public class Matrix
         return CalculateDeterminant(Data);
     }
 
+    // метод для рекурсивного обчислення визначника.
     private double CalculateDeterminant(double[,] matrix)
     {
         int n = matrix.GetLength(0);
@@ -63,6 +68,7 @@ public class Matrix
         return det;
     }
 
+    // Метод для генерації випадкової матриці заданого розміру.
     public static Matrix GenerateRandomMatrix(int size, int minValue = 0, int maxValue = 10)
     {
         Random random = new Random();
@@ -79,6 +85,7 @@ public class Matrix
         return new Matrix(data);
     }
 
+    // Перевизначення методу ToString для форматованого виведення матриці.
     public override string ToString()
     {
         StringBuilder sb = new StringBuilder();

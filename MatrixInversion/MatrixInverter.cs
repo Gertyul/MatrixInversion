@@ -4,6 +4,14 @@ using System;
 
 public static class MatrixInverter
 {
+    /// <summary>
+    /// Інвертує матрицю, використовуючи метод ітерацій Шульца.
+    /// </summary>
+    /// <param name="matrix">Матриця, яку потрібно інвертувати.</param>
+    /// <param name="log">Журнал процесу ітерацій.</param>
+    /// <param name="timeElapsed">Час, витрачений на процес інверсії.</param>
+    /// <param name="operationCount">Кількість виконаних операцій.</param>
+    /// <returns>Інвертована матриця.</returns>
     public static Matrix InvertUsingSchulz(Matrix matrix, out string log, out double timeElapsed, out long operationCount)
     {
         int n = matrix.Size;
@@ -25,10 +33,10 @@ public static class MatrixInverter
 
         for (int k = 0; k < maxIterations; k++)
         {
-            R = MatrixSubtract(I, MatrixMultiply(A, X, ref operationCount));
-            X_next = MatrixAdd(X, MatrixMultiply(X, R, ref operationCount));
+            R = MatrixSubtract(I, MatrixMultiply(A, X, ref operationCount)); // Матриця залишків
+            X_next = MatrixAdd(X, MatrixMultiply(X, R, ref operationCount)); // Оновлення наближення
 
-            operationCount += 2 * n * n;
+            operationCount += n * n * n;
 
             if (MatrixNorm(MatrixSubtract(X_next, X)) < tolerance)
             {
@@ -57,6 +65,12 @@ public static class MatrixInverter
         return new Matrix(X_next);
     }
 
+    /// <summary>
+    /// Створює початкове наближення для інверсії матриці.
+    /// </summary>
+    /// <param name="A">Вхідна матриця.</param>
+    /// <param name="n">Розмір матриці.</param>
+    /// <returns>Початкове наближення.</returns>
     private static double[,] CreateInitialApproximation(double[,] A, int n)
     {
         double[,] At = MatrixTranspose(A);
@@ -69,6 +83,12 @@ public static class MatrixInverter
         return X0;
     }
 
+    /// <summary>
+    /// Додає дві матриці.
+    /// </summary>
+    /// <param name="A">Перша матриця.</param>
+    /// <param name="B">Друга матриця.</param>
+    /// <returns>Результат додавання.</returns>
     private static double[,] MatrixAdd(double[,] A, double[,] B)
     {
         int n = A.GetLength(0);
@@ -85,6 +105,12 @@ public static class MatrixInverter
         return result;
     }
 
+    /// <summary>
+    /// Віднімає другу матрицю від першої.
+    /// </summary>
+    /// <param name="A">Перша матриця.</param>
+    /// <param name="B">Друга матриця.</param>
+    /// <returns>Результат віднімання.</returns>
     private static double[,] MatrixSubtract(double[,] A, double[,] B)
     {
         int n = A.GetLength(0);
@@ -101,6 +127,13 @@ public static class MatrixInverter
         return result;
     }
 
+    /// <summary>
+    /// Множить дві матриці.
+    /// </summary>
+    /// <param name="A">Перша матриця.</param>
+    /// <param name="B">Друга матриця.</param>
+    /// <param name="operationCount">Лічильник операцій.</param>
+    /// <returns>Результат множення.</returns>
     private static double[,] MatrixMultiply(double[,] A, double[,] B, ref long operationCount)
     {
         int n = A.GetLength(0);
@@ -122,6 +155,11 @@ public static class MatrixInverter
         return result;
     }
 
+    /// <summary>
+    /// Транспонує матрицю.
+    /// </summary>
+    /// <param name="A">Вхідна матриця.</param>
+    /// <returns>Транспонована матриця.</returns>
     private static double[,] MatrixTranspose(double[,] A)
     {
         int n = A.GetLength(0);
@@ -138,6 +176,11 @@ public static class MatrixInverter
         return At;
     }
 
+    /// <summary>
+    /// Обчислює норму матриці.
+    /// </summary>
+    /// <param name="A">Вхідна матриця.</param>
+    /// <returns>Норма матриці.</returns>
     private static double MatrixNorm(double[,] A)
     {
         double sum = 0;
@@ -149,6 +192,11 @@ public static class MatrixInverter
         return Math.Sqrt(sum);
     }
 
+    /// <summary>
+    /// Створює одиничну матрицю заданого розміру.
+    /// </summary>
+    /// <param name="n">Розмір матриці.</param>
+    /// <returns>Одинична матриця.</returns>
     private static double[,] CreateIdentityMatrix(int n)
     {
         double[,] I = new double[n, n];
@@ -160,6 +208,12 @@ public static class MatrixInverter
         return I;
     }
 
+    /// <summary>
+    /// Множить матрицю на скаляр.
+    /// </summary>
+    /// <param name="A">Вхідна матриця.</param>
+    /// <param name="scalar">Скаляр.</param>
+    /// <returns>Результат множення.</returns>
     private static double[,] MatrixMultiplyByScalar(double[,] A, double scalar)
     {
         int n = A.GetLength(0);
@@ -176,6 +230,11 @@ public static class MatrixInverter
         return result;
     }
 
+    /// <summary>
+    /// Перетворює матрицю у рядкове представлення.
+    /// </summary>
+    /// <param name="matrix">Вхідна матриця.</param>
+    /// <returns>Рядкове представлення матриці.</returns>
     private static string MatrixToString(double[,] matrix)
     {
         StringBuilder sb = new StringBuilder();
@@ -190,6 +249,14 @@ public static class MatrixInverter
         return sb.ToString();
     }
 
+    /// <summary>
+    /// Інвертує матрицю, використовуючи метод LU-розкладу.
+    /// </summary>
+    /// <param name="matrix">Матриця, яку потрібно інвертувати.</param>
+    /// <param name="log">Журнал процесу.</param>
+    /// <param name="timeElapsed">Час, витрачений на процес інверсії.</param>
+    /// <param name="operationCount">Кількість виконаних операцій.</param>
+    /// <returns>Інвертована матриця.</returns>
     public static Matrix InvertUsingLUP(Matrix matrix, out string log, out double timeElapsed, out long operationCount)
     {
         int n = matrix.Size;
@@ -234,6 +301,16 @@ public static class MatrixInverter
         return new Matrix(invA);
     }
 
+    /// <summary>
+    /// Виконує LU-розклад матриці з частковим поворотом.
+    /// </summary>
+    /// <param name="A">Вхідна матриця.</param>
+    /// <param name="L">Нижня трикутна матриця.</param>
+    /// <param name="U">Верхня трикутна матриця.</param>
+    /// <param name="P">Вектор перестановок.</param>
+    /// <param name="operationCount">Лічильник операцій.</param>
+    /// <param name="log">Журнал процесу розкладу.</param>
+    /// <returns>True, якщо розклад успішний, False у випадку виродженої матриці.</returns>
     private static bool LUPDecompose(double[,] A, double[,] L, double[,] U, int[] P, ref long operationCount, ref string log)
     {
         int n = A.GetLength(0);
@@ -314,6 +391,14 @@ public static class MatrixInverter
         return true;
     }
 
+    /// <summary>
+    /// Виконує пряме підстановлення.
+    /// </summary>
+    /// <param name="L">Нижня трикутна матриця.</param>
+    /// <param name="P">Вектор перестановок.</param>
+    /// <param name="b">Вектор правої частини.</param>
+    /// <param name="operationCount">Лічильник операцій.</param>
+    /// <returns>Результуючий вектор.</returns>
     private static double[] ForwardSubstitution(double[,] L, int[] P, double[] b, ref long operationCount)
     {
         int n = L.GetLength(0);
@@ -332,6 +417,13 @@ public static class MatrixInverter
         return y;
     }
 
+    /// <summary>
+    /// Виконує зворотне підстановлення.
+    /// </summary>
+    /// <param name="U">Верхня трикутна матриця.</param>
+    /// <param name="y">Проміжний вектор.</param>
+    /// <param name="operationCount">Лічильник операцій.</param>
+    /// <returns>Результуючий вектор.</returns>
     private static double[] BackSubstitution(double[,] U, double[] y, ref long operationCount)
     {
         int n = U.GetLength(0);

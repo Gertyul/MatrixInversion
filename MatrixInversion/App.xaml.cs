@@ -9,7 +9,7 @@ using System.Windows;
 namespace MatrixInversion
 {
     /// <summary>
-    /// Логика взаимодействия для App.xaml
+    /// Логіка дій App.xaml
     /// </summary>
     public partial class App : Application
     {

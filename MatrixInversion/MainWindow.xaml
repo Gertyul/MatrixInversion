@@ -3,8 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Matrix Inversion Tool" Height="600" Width="800"
         Background="#f0f0f0">
+    <!-- Визначає головне вікно з заголовком "Matrix Inversion Tool", встановлює висоту, ширину та фон. -->
+
     <Window.Resources>
+        <!-- Ресурси, доступні у всьому вікні. -->
         <Storyboard x:Key="ButtonClickStoryboard">
+            <!-- Анімація для кнопок, яка зменшує масштаб кнопки при натисканні. -->
             <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
                              From="1.0" To="0.9" Duration="0:0:0.1" AutoReverse="True"/>
             <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
@@ -13,65 +17,103 @@
     </Window.Resources>
 
     <Grid>
+        <!-- Використовує сітку як основний контейнер для компонування елементів управління. -->
+
         <Grid.RowDefinitions>
+            <!-- Визначає три рядки у сітці з різними характеристиками висоти. -->
             <RowDefinition Height="Auto"/>
+            <!-- Перший рядок має висоту, яка автоматично підлаштовується під вміст. -->
             <RowDefinition Height="*"/>
+            <!-- Другий рядок займає залишковий простір. -->
             <RowDefinition Height="Auto"/>
+            <!-- Третій рядок також має висоту, яка автоматично підлаштовується під вміст. -->
         </Grid.RowDefinitions>
+
         <Grid.ColumnDefinitions>
+            <!-- Визначає дві колонки у сітці з однаковою шириною. -->
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Title and Description -->
+        <!-- Заголовок і опис інструменту -->
         <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Margin="10" Background="#007ACC">
+            <!-- Панель StackPanel для заголовка і опису, розташована в першому рядку сітки, займає дві колонки. -->
             <TextBlock Text="Matrix Inversion Tool" FontSize="24" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+            <!-- Текстовий блок з заголовком інструменту, встановлено розмір шрифту, товщину шрифту, колір тексту та вирівнювання по центру. -->
             <TextBlock Text="This tool allows you to input or generate a matrix, and then invert it using either the Schulz Method or the LUP Decomposition method. You can also save the results and intermediate steps to a file." 
                        FontSize="14" Foreground="White" TextWrapping="Wrap" HorizontalAlignment="Center" Margin="10,0,10,0"/>
+            <!-- Текстовий блок з описом інструменту, встановлено розмір шрифту, колір тексту, вирівнювання по центру та відступи. -->
         </StackPanel>
 
-        <!-- Original Matrix Section -->
+        <!-- Секція оригінальної матриці -->
         <GroupBox Header="Original Matrix" Grid.Row="1" Grid.Column="0" Margin="10">
+            <!-- Груповий блок для оригінальної матриці, розташований в другому рядку і першій колонці сітки. -->
             <StackPanel>
+                <!-- Панель StackPanel для розміщення елементів управління вертикально. -->
                 <Button Name="InputMatrixButton" Content="Input Matrix" Click="InputMatrixButton_Click" Margin="5" RenderTransformOrigin="0.5,0.5">
+                    <!-- Кнопка для введення матриці, подія натискання обробляється методом InputMatrixButton_Click. -->
                     <Button.RenderTransform>
                         <ScaleTransform/>
+                        <!-- Застосовується трансформація масштабу до кнопки. -->
                     </Button.RenderTransform>
                 </Button>
+                <Button Name="LoadMatrixButton" Content="Load Matrix from File" Click="LoadMatrixButton_Click" Margin="5"/>
+
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
-                    <TextBlock Text="Size:" VerticalAlignment="Center" Margin="5"/>
+                    <!-- Горизонтальна панель StackPanel для вводу розміру матриці. -->
+                    <TextBlock Text="Random matrix size:" VerticalAlignment="Center" Margin="5"/>
+                    <!-- Текстовий блок з підписом "Size:". -->
                     <TextBox Name="MatrixSizeTextBox" Width="50" Margin="5"/>
+                    <!-- Текстове поле для введення розміру матриці. -->
                 </StackPanel>
                 <Button Name="GenerateMatrixButton" Content="Generate Matrix" Click="GenerateMatrixButton_Click" Margin="5" RenderTransformOrigin="0.5,0.5">
+                    <!-- Кнопка для генерації матриці, подія натискання обробляється методом GenerateMatrixButton_Click. -->
                     <Button.RenderTransform>
                         <ScaleTransform/>
+                        <!-- Застосовується трансформація масштабу до кнопки. -->
                     </Button.RenderTransform>
                 </Button>
-                <DataGrid Name="OriginalMatrixDataGrid" AutoGenerateColumns="True" CanUserAddRows="False" IsReadOnly="True" Margin="5"/>
+                <DataGrid Name="OriginalMatrixDataGrid" AutoGenerateColumns="True" CanUserAddRows="False" IsReadOnly="True" Margin="5"
+                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto" Height="200"/>
+                <!-- Таблиця даних для відображення оригінальної матриці, автоматично генерує стовпці, користувач не може додавати рядки, доступна лише для читання, з автоматичними горизонтальним та вертикальним скролінгом. -->
             </StackPanel>
         </GroupBox>
 
-        <!-- Inverted Matrix Section -->
+        <!-- Секція інвертованої матриці -->
         <GroupBox Header="Inverted Matrix" Grid.Row="1" Grid.Column="1" Margin="10">
+            <!-- Груповий блок для інвертованої матриці, розташований в другому рядку і другій колонці сітки. -->
             <StackPanel>
-                <DataGrid Name="InvertedMatrixDataGrid" AutoGenerateColumns="True" CanUserAddRows="False" IsReadOnly="True" Margin="5"/>
+                <!-- Панель StackPanel для розміщення елементів управління вертикально. -->
+                <DataGrid Name="InvertedMatrixDataGrid" AutoGenerateColumns="True" CanUserAddRows="False" IsReadOnly="True" Margin="5"
+                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto" Height="200"/>
+                <!-- Таблиця даних для відображення інвертованої матриці, автоматично генерує стовпці, користувач не може додавати рядки, доступна лише для читання, з автоматичними горизонтальним та вертикальним скролінгом. -->
             </StackPanel>
         </GroupBox>
 
-        <!-- Controls Section -->
+        <!-- Секція управління -->
         <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <!-- Горизонтальна панель StackPanel для кнопок управління, розташована в третьому рядку сітки, займає дві колонки. -->
             <StackPanel Orientation="Vertical" Margin="10">
+                <!-- Вертикальна панель StackPanel для перемикачів методів інверсії. -->
                 <RadioButton Name="SchulzMethodRadioButton" Content="Schulz Method" IsChecked="True" Margin="5"/>
+                <!-- Радіо-кнопка для вибору методу Schulz, встановлена за замовчуванням. -->
                 <RadioButton Name="LUPMethodRadioButton" Content="LUP Method" Margin="5"/>
+                <!-- Радіо-кнопка для вибору методу LUP. -->
             </StackPanel>
             <Button Name="InvertMatrixButton" Content="Invert Matrix" Click="InvertMatrixButton_Click" Width="150" Height="40" Margin="10" RenderTransformOrigin="0.5,0.5">
+                <!-- Кнопка для інверсії матриці, подія натискання обробляється методом InvertMatrixButton_Click. -->
                 <Button.RenderTransform>
                     <ScaleTransform/>
+                    <!-- Застосовується трансформація масштабу до кнопки. -->
                 </Button.RenderTransform>
             </Button>
             <Button Name="SaveResultButton" Content="Save Result" Click="SaveResultButton_Click" Width="150" Height="40" Margin="10" RenderTransformOrigin="0.5,0.5">
+                <!-- Кнопка для збереження результату, подія натискання обробляється методом SaveResultButton_Click. -->
                 <Button.RenderTransform>
                     <ScaleTransform/>
+                    <!-- Застосовується трансформація масштабу до кнопки. -->
                 </Button.RenderTransform>
             </Button>
         </StackPanel>
